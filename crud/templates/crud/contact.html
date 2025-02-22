@@ -1,10 +1,108 @@
 {% extends "crud/base_generic.html" %}
 
 {% block content %}
-  {% for contact in contacts %}
-    <div class="mb-3 mt-5">
-        {{ contacts.name }}
+    <div class="row">
+
+        <div class="col-sm-12">
+            <button type="button" id="show-add-new-contact-form" class="btn btn-success mt-1 float-end" data-bs-toggle="modal" data-bs-target="#exampleModal-oce">
+                Create Contact
+            </button>
+        </div>
+
+        <div class="col-sm-12">
+            <div id="delete_contact"></div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Telephone</th>
+                      <th scope="col">Address</th>
+                      <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    {% if contacts %}
+                        {% for contact in contacts %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ contact.name }}</td>
+                                <td>{{ contact.telephone }}</td>
+                                <td>{{ contact.address }}</td>
+                                <td>
+                                    
+                                        {% csrf_token %}
+                                        <a href="#" title="Edit"><button class="btn btn-xs btn-info mx-2 mb-2"  data-edit-contact="{{  contact.id }}"> Edit  </button> </a>
+                                        <a href="#" title="Delete"><button class="btn btn-xs btn-danger mx-2 mb-2" data-delete-url="{% url 'crud:delete' contact.id %}" data-delete-contact="{{  contact.id }}"> Delete  </button> </a>
+                                    
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    
+                    {% else %}
+                        No Contact Address
+                    {% endif %}
+
+                </tbody>
+            </table>
+
+        </div>
     </div>
-  {% endfor %}
-  <h2>OCE WHAT ARE U DOING</h2>
+  {% include "crud/partials/add_form.html" %}
+
+  <script type="text/javascript">
+
+
+    $(document).ready(function() {
+
+        $(document).on('click','[data-delete-contact]',function(e) {
+            e.preventDefault();
+            e.preventDefault();
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('input[name="csrfmiddlewaretoken"]').val()}});
+            let edit = window.confirm('Are you sure you want to delete this Contact');
+            const formData = {
+                csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
+                id: $(this).attr('data-delete-contact')
+            }
+
+            let route = 'crud:delete'  + formData.id;
+
+            if(edit == true){
+
+                $.ajax({
+                    data: formData, // get the form data
+                    type: "GET",
+                    url: $(this).attr('data-delete-url'),
+                    cache: false,
+                    processData:false,
+                    contentType: false,
+                    // on success
+                    success: function (response) {
+                        if(response.error)
+                        {
+                            $('#delete_contact').append('<li class="delete_portal_msg">'+response.error+'</li>');
+                        } else {
+                            alert('Contact Successfully deleted');
+                            location.reload(true);
+                        }
+                    },
+                    // on error
+                    error: function (response) {
+                        $('.backend-json-response').html('');
+                        $('.backend-json-response').append('<span class="alert alert-danger mr-4" style="display:inline-block;"> '+response.responseJSON.errors+'</span>');
+                    }
+                });
+                return false;
+
+            } else {
+                location.reload(true);
+            }
+        })
+    })
+
+  </script>
+
+
 {% endblock %}

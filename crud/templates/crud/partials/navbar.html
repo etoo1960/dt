@@ -5,18 +5,8 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-        {% if  user.is_authenticated %}
-            <form class="d-flex" role="logout" id="logout-form" method="post" action="#">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-info btn-sm"> Log out</button>
-            </form>
-        {% else %}
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">Login</a>
-                </li>
-            </ul>
-        {% endif %}
+
+
     </div>
     </div>
 </nav>

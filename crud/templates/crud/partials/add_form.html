@@ -1,0 +1,110 @@
+<!-- Modal -->
+<div class="modal fade" id="new-contact-form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Create Contact</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+            <form>
+                {% csrf_token %}
+                <div id="role_error" class="backend-json-response"></div>
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Name</label>
+                  <input type="text" class="form-control" id="name">
+                </div>
+                <div class="mb-3">
+                    <label for="recipient-name" class="col-form-label">Telephone</label>
+                    <input type="text" class="form-control" id="telephone">
+                </div>
+                <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Address</label>
+                    <textarea class="form-control" id="address"></textarea>
+                </div>
+            </form>
+         
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="add-new-contact">Save changes</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        //Show Modal for New Contact Form
+        $(document).on('click','#show-add-new-contact-form',function(e) {
+            e.preventDefault();
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('input[name="csrfmiddlewaretoken"]').val()}});
+            // $('.backend-json-response').html('');
+            $('#new-contact-form').modal('show');
+        })
+
+        $('#telephone').keyup(function () {
+            // create an AJAX call
+            $.ajax({
+                data: $(this).serialize(), // get the form data
+                url: "{% url 'crud:validate_telephone' %}",
+                // on success
+                success: function (response) {
+                    if (response.is_taken == true) {
+                        $('#telephoneError').remove();
+                        $('#telephone').removeClass('is-valid').addClass('is-invalid');
+                        $('#telephone').after('<div class="invalid-feedback d-block" id="telephoneError">This telephone is already associated to another person</div>')
+                    }
+                    else {
+                        $('#telephone').removeClass('is-invalid').addClass('is-valid');
+                        $('#telephoneError').remove();
+                    }
+                },
+                // on error
+                error: function (response) {
+                    // alert the error if any error occured
+                    console.log(response.responseJSON.errors)
+                }
+            });
+            return false;
+        })
+
+        $(document).on('click','#add-new-contact',function(e) {
+            e.preventDefault();
+            e.preventDefault();
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('input[name="csrfmiddlewaretoken"]').val()}});
+            let formData = new FormData();
+            formData.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').val());
+            formData.append('name', $('#name').val());
+            formData.append('telephone', $('#telephone').val());
+            formData.append('address', $('#address').val());
+            // create an AJAX call
+            $.ajax({
+                data: formData, // get the form data
+                type: "POST",
+                url: "{% url 'crud:create' %}",
+                cache: false,
+                processData:false,
+                contentType: false,
+                // on success
+                success: function (response) {
+                    alert('Contant: (' + response.telephone + ') Successfully created');
+                    window.setTimeout( function(){
+                        $('#new-contact-form').modal('hide');
+                        location.reload(true);
+                    },1000);
+                },
+                // on error
+                error: function (response) {
+                    $('.backend-json-response').html('');
+                    $('.backend-json-response').append('<span class="alert alert-danger mr-4" style="display:inline-block;"> '+response.responseJSON.errors+'</span>');
+                }
+            });
+            return false;
+        })
+    })
+
+</script>
