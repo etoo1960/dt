@@ -1,0 +1,10 @@
+{% extends "crud/base_generic.html" %}
+
+{% block content %}
+  {% for contact in contacts %}
+    <div class="mb-3 mt-5">
+        {{ contacts.name }}
+    </div>
+  {% endfor %}
+  <h2>OCE WHAT ARE U DOING</h2>
+{% endblock %}
