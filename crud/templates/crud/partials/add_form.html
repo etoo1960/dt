@@ -83,7 +83,7 @@
             formData.append('address', $('#address').val());
             // create an AJAX call
             $.ajax({
-                data: formData, // get the form data
+                data: formData,
                 type: "POST",
                 url: "{% url 'crud:create' %}",
                 cache: false,
@@ -99,8 +99,13 @@
                 },
                 // on error
                 error: function (response) {
+                    let errors = JSON.parse(response.responseJSON.errors);
                     $('.backend-json-response').html('');
-                    $('.backend-json-response').append('<span class="alert alert-danger mr-4" style="display:inline-block;"> '+response.responseJSON.errors+'</span>');
+                    $.each(errors, function(key, value){
+                        $('.backend-json-response').append(
+                            '<span class="alert alert-danger mr-4" style="display:inline-block;"> '+ key.toUpperCase() + ' : ' +value[0].message+'</span>'
+                        );
+                    });
                 }
             });
             return false;

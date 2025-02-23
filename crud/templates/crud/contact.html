@@ -31,7 +31,7 @@
                                 <td>{{ contact.telephone }}</td>
                                 <td>{{ contact.address }}</td>
                                 <td>
-                                        <a href="#" title="Edit"><button class="btn btn-xs btn-info mx-2 mb-2" data-edit-url="{% url 'crud:show' contact.id %}"  data-edit-contact="{{  contact.id }}"> Edit  </button> </a>
+                                        <a href="#" title="Edit"><button class="btn btn-xs btn-info mx-2 mb-2" data-update-url="{% url 'crud:update' contact.id %}" data-edit-url="{% url 'crud:show' contact.id %}"  data-edit-contact="{{  contact.id }}"> Edit  </button> </a>
                                         <a href="#" title="Delete"><button class="btn btn-xs btn-danger mx-2 mb-2" data-delete-url="{% url 'crud:delete' contact.id %}" data-delete-contact="{{  contact.id }}"> Delete  </button> </a>
                                     
 

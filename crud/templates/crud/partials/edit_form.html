@@ -11,6 +11,8 @@
             <form>
                 {% csrf_token %}
                 <div id="edit_error" class="backend-json-response"></div>
+                <input type="hidden" class="form-control" id="edit-id">
+                <input type="hidden" class="form-control" id="edit-url">
                 <div class="mb-3">
                   <label for="recipient-name" class="col-form-label">Name</label>
                   <input type="text" class="form-control" id="edit-name">
@@ -28,7 +30,7 @@
         </div>
         <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="edit-contact-details">Save changes</button>
+        <button type="button" class="btn btn-primary" id="update-contact-details">Save changes</button>
         </div>
     </div>
     </div>
@@ -46,7 +48,7 @@
                 csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
                 id: $(this).attr('data-edit-contact')
             };
-            // alert(formData.id);
+            updateUrl = $(this).attr('data-update-url');
             $.ajax({
                 data: formData, // get the form data
                 url: $(this).attr('data-edit-url'),
@@ -62,6 +64,8 @@
                         $('#edit-name').val(parseData[0].fields.name);
                         $('#edit-telephone').val(parseData[0].fields.telephone);
                         $('#edit-address').val(parseData[0].fields.address);
+                        $('#edit-id').val(parseData[0].pk);
+                        $('#edit-url').val(updateUrl);
                         $('#edit-contact-form').modal('show');
                     }
                 },
@@ -69,6 +73,47 @@
                 error: function (response) {
                     // alert the error if any error occured
                     console.log(response.responseJSON.errors)
+                }
+            });
+            return false;
+        })
+
+        $(document).on('click','#update-contact-details',function(e) {
+            e.preventDefault();
+            e.preventDefault();
+            $.ajaxSetup({headers: {'X-CSRF-TOKEN': $('input[name="csrfmiddlewaretoken"]').val()}});
+            let formData = new FormData();
+            formData.append('csrfmiddlewaretoken', $('input[name="csrfmiddlewaretoken"]').val());
+            formData.append('name', $('#edit-name').val());
+            formData.append('telephone', $('#edit-telephone').val());
+            formData.append('address', $('#edit-address').val());
+            formData.append('id', $('#edit-id').val());
+            let url = $('#edit-url').val();
+            // create an AJAX call
+            $.ajax({
+                data: formData,
+                type: "POST",
+                url: url,
+                cache: false,
+                processData:false,
+                contentType: false,
+                // on success
+                success: function (response) {
+                    alert('Contact: Successfully Updated');
+                    window.setTimeout( function(){
+                        $('#new-contact-form').modal('hide');
+                        location.reload(true);
+                    },1000);
+                },
+                // on error
+                error: function (response) {
+                    let errors = JSON.parse(response.responseJSON.errors);
+                    $('.backend-json-response').html('');
+                    $.each(errors, function(key, value){
+                        $('.backend-json-response').append(
+                            '<span class="alert alert-danger mr-4" style="display:inline-block;"> '+ key.toUpperCase() + ' : ' +value[0].message+'</span>'
+                        );
+                    });
                 }
             });
             return false;

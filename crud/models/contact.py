@@ -15,5 +15,5 @@ class Contact(models.Model):
     def __str__(self):
         return self.telephone
 
-    # def get_absolute_url(self):
-    #     return reverse("cms:post-detail", kwargs={"pk": self.pk})
+    def get_absolute_url(self):
+        return reverse("crud:show", kwargs={"pk": self.pk})

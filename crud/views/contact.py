@@ -1,11 +1,10 @@
 from django.shortcuts import render
-from django.views import generic
-from django.views.decorators.http import require_POST
-from django.views.generic import DetailView
+from django.views.decorators.http import require_GET, require_POST
 from django.http import JsonResponse
 from django.core import serializers
 
 from crud.forms.contact_form import ContactForm
+from crud.forms.update_contact_form import UpdateContactForm
 from crud.models.contact import Contact
 
 
@@ -48,4 +47,17 @@ def show(request, pk):
         return JsonResponse({"contact": data})
     except Contact.DoesNotExist:
         return JsonResponse({"error": "Contact does not exists"})
+    
+@require_POST
+def update(request, pk):
+    try:
+        contact = Contact.objects.get(pk=pk)
+        form = UpdateContactForm(request.POST, instance=contact)
+        form.save()
+        return JsonResponse({"Successful": 'Contact Successfully Updated'})
+    except Contact.DoesNotExist:
+        return JsonResponse({"error": "Contact does not exists"})
+    except ValueError:
+        errors = form.errors.as_json()
+        return JsonResponse({"errors": errors}, status=400)
 
