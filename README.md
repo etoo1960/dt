@@ -31,3 +31,5 @@ Django can be seamless deploy to any cloud provider services
 
 Django can be deploy with WSGI (Web Server Gateway Interface) or ASGI (Asynchronous Server Gateway Interface).
 The [link](https://docs.djangoproject.com/en/5.1/howto/deployment/) reference django official documentation on how to seamlessly deploy django application to different servers.
+
+![alt text](https://github.com/etoo1960/dt/blob/main/crud/static/crud/Screenshot%20from%202025-02-23%2019-15-27.png)
