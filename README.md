@@ -1,7 +1,7 @@
 # Deapartment for Transport Contact Module Task
 
 ## Cloning the Task form the Repo
-[Tast Repo](https://github.com/etoo1960/dt)
+[Task Repo](https://github.com/etoo1960/dt)
 
 `git clone https://github.com/etoo1960/dt`
 
@@ -30,4 +30,4 @@ Django can be seamless deploy to any cloud provider services
 - Google cloud
 
 Django can be deploy with WSGI (Web Server Gateway Interface) or ASGI (Asynchronous Server Gateway Interface).
-The [link](https://docs.djangoproject.com/en/5.1/howto/deployment/) reference django official document on how to seamlessly deploy django application to different servers.
+The [link](https://docs.djangoproject.com/en/5.1/howto/deployment/) reference django official documentation on how to seamlessly deploy django application to different servers.
