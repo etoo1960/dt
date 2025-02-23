@@ -31,9 +31,7 @@
                                 <td>{{ contact.telephone }}</td>
                                 <td>{{ contact.address }}</td>
                                 <td>
-                                    
-                                        {% csrf_token %}
-                                        <a href="#" title="Edit"><button class="btn btn-xs btn-info mx-2 mb-2"  data-edit-contact="{{  contact.id }}"> Edit  </button> </a>
+                                        <a href="#" title="Edit"><button class="btn btn-xs btn-info mx-2 mb-2" data-edit-url="{% url 'crud:show' contact.id %}"  data-edit-contact="{{  contact.id }}"> Edit  </button> </a>
                                         <a href="#" title="Delete"><button class="btn btn-xs btn-danger mx-2 mb-2" data-delete-url="{% url 'crud:delete' contact.id %}" data-delete-contact="{{  contact.id }}"> Delete  </button> </a>
                                     
 
@@ -51,6 +49,7 @@
         </div>
     </div>
   {% include "crud/partials/add_form.html" %}
+  {% include "crud/partials/edit_form.html" %}
 
   <script type="text/javascript">
 
@@ -66,8 +65,6 @@
                 csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val(),
                 id: $(this).attr('data-delete-contact')
             }
-
-            let route = 'crud:delete'  + formData.id;
 
             if(edit == true){
 

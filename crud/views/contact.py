@@ -3,6 +3,7 @@ from django.views import generic
 from django.views.decorators.http import require_POST
 from django.views.generic import DetailView
 from django.http import JsonResponse
+from django.core import serializers
 
 from crud.forms.contact_form import ContactForm
 from crud.models.contact import Contact
@@ -33,10 +34,18 @@ def create(request):
         return JsonResponse({"errors": errors}, status=400)
     
 def delete(request, pk):
-        try:
-            contact = Contact.objects.get(pk=pk)
-            contact.delete()
-            return JsonResponse({"success": "Contact successfully deleted"})
-        except Contact.DoesNotExist:
-            return JsonResponse({"error": "Contact does not exists"})
+    try:
+        contact = Contact.objects.get(pk=pk)
+        contact.delete()
+        return JsonResponse({"success": "Contact successfully deleted"})
+    except Contact.DoesNotExist:
+        return JsonResponse({"error": "Contact does not exists"})
+        
+def show(request, pk):
+    try:
+        contact = Contact.objects.filter(pk=pk)
+        data = serializers.serialize('json', contact, fields=["name", "telephone", "address"])
+        return JsonResponse({"contact": data})
+    except Contact.DoesNotExist:
+        return JsonResponse({"error": "Contact does not exists"})
 

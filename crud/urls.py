@@ -7,6 +7,6 @@ urlpatterns = [
     path('', contact.index, name='index'),
     path('validate_telephone', contact.validate_telephone, name='validate_telephone'),
     path('create', contact.create, name='create'),
-    path('delete/<pk>/', contact.delete, name='delete')
-    # path('posts/<int:pk>/', post.index, name='post-detail'),
+    path('delete/<int:pk>/', contact.delete, name='delete'),
+    path('show/<int:pk>/', contact.show, name='show'),
 ]
