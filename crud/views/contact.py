@@ -8,8 +8,8 @@ from crud.forms.update_contact_form import UpdateContactForm
 from crud.models.contact import Contact
 
 
-def index(request):
-    contacts = Contact.objects.all()
+def index(request, skip: int = 0, limit: int = 50):
+    contacts = Contact.objects.all()[skip:limit]
     
     return render(request, 'crud/contact.html', {"contacts": contacts})
 
