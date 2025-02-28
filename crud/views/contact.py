@@ -8,10 +8,15 @@ from crud.forms.update_contact_form import UpdateContactForm
 from crud.models.contact import Contact
 
 
-def index(request, skip: int = 0, limit: int = 50):
-    contacts = Contact.objects.all()[skip:limit]
+def index(request):
+    try:
+        skip = int(request.GET.get("skip")) if request.GET.get("skip") else 0
+        limit = int(request.GET.get("limit")) if request.GET.get("limit") else 0
+        contacts = Contact.objects.all()[skip:limit]
     
-    return render(request, 'crud/contact.html', {"contacts": contacts})
+        return render(request, 'crud/contact.html', {"contacts": contacts})
+    except ValueError:
+        return JsonResponse({"errors": 'An Error occur'})
 
 def validate_telephone(request):
     """Check username availability"""
