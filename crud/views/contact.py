@@ -11,9 +11,9 @@ from crud.models.contact import Contact
 def index(request):
     try:
         skip = int(request.GET.get("skip")) if request.GET.get("skip") else 0
-        limit = int(request.GET.get("limit")) if request.GET.get("limit") else 0
+        limit = int(request.GET.get("limit")) if request.GET.get("limit") else 20
         contacts = Contact.objects.all()[skip:limit]
-    
+        
         return render(request, 'crud/contact.html', {"contacts": contacts})
     except ValueError:
         return JsonResponse({"errors": 'An Error occur'})
