@@ -12,7 +12,7 @@
 `source .venv/bin/activate`
 
 ## Installing Django
-`python -m pip install Django`
+`pip install -r requirements.txt`
 
 ## Running the Migration
 `python manage.py migrate`
